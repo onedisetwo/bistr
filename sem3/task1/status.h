@@ -12,18 +12,22 @@ enum class err_type {
 
 class Status {
 	private:
-		state e = err_type::success;
+		err_type state = err_type::success;
 	public:
-		Status (const err_type& n_e) {
-			e = n_e.state;
+		Status () = default;
+		Status (const err_type& n_state) {
+			state = n_state;
 		}
 		bool good () {
-			return (e == err_type::success ? true : false)
+			return (state == err_type::success ? true : false);
 		}
 		void print_error_message () {
-			if(e == err_type::success)
+			if(state == err_type::success)
 				return ;
 		}
-}
+		int operator!= (const Status& n_st) {
+			return (state != n_st.state ? 1 : 0);
+		}
+} ;
 
-# endif STATUS
+# endif //STATUS

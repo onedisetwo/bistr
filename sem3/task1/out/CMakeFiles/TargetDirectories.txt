@@ -1,0 +1,4 @@
+/home/onedisetwo/yandexDisk/bistr/sem3/task1/out/CMakeFiles/geometry_task.dir
+/home/onedisetwo/yandexDisk/bistr/sem3/task1/out/CMakeFiles/geometry_task_selftest.dir
+/home/onedisetwo/yandexDisk/bistr/sem3/task1/out/CMakeFiles/edit_cache.dir
+/home/onedisetwo/yandexDisk/bistr/sem3/task1/out/CMakeFiles/rebuild_cache.dir

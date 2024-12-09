@@ -1,0 +1,151 @@
+        -:    0:Colorization: profile count: [46m[Kzero coverage (exceptional)[m[K [41m[Kzero coverage (unexceptional)[m[K [45m[Kunexecuted block[m[K
+        -:    0:Source:/home/onedisetwo/yandexDisk/bistr/sem3/task1/inc/geometry.h
+        -:    0:Graph:task.cpp.gcno
+        -:    0:Data:task.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/*!
+        -:    2:	\file
+        -:    3:	\author Полина Клинова
+        -:    4:	\brief Заголовочный файл с реализацией классов Point и Polygon в необходимом для решения задачи объёме
+        -:    5:*/
+        -:    6:
+        -:    7:# ifndef GEOMETRY
+        -:    8:# define GEOMETRY
+        -:    9:
+        -:   10:# include <cmath>
+        -:   11:# include <cstdio>
+        -:   12:# include "status.h"
+        -:   13:
+        -:   14:/// Пространство имён геометрических объектов в плоскости
+        -:   15:namespace R2 {
+        -:   16:
+        -:   17:	/*!
+        -:   18:		\brief Класс, реализующий точку
+        -:   19:	*/
+        -:   20:	class Point {
+        -:   21:		private:
+        -:   22:			double x = 0;
+        -:   23:			double y = 0;
+        -:   24:		public:
+        -:   25:			/// Конструктор по умолчанию
+        5:   26:			Point () = default;
+        -:   27:			/// Деструктор по умолчанию
+        -:   28:			~Point () = default;
+        -:   29:			/// Конструктор по другой точке
+        -:   30:			Point (const Point& p) {
+        -:   31:				x = p.x;  y = p.y;
+        -:   32:			}
+        -:   33:			/// Конструктор по координатам
+        4:   34:			Point (double n_x, double n_y) {
+        4:   35:				x = n_x;  y = n_y;
+        4:   36:			}
+        -:   37:			/// Оператор присваивания
+        -:   38:			Point& operator= (const Point& p) {
+        -:   39:				x = p.x;  y = p.y;
+        -:   40:				return *this;
+        -:   41:			}
+        -:   42:			/*!
+        -:   43:				Ввод точки из файлы
+        -:   44:
+        -:   45:				\param fp Файл для ввода (по умолчанию stdin)
+        -:   46:				\param is_human {По умолчанию false, при true выводятся сообщения
+        -:   47:					о том, что нужно вводить в данный момент}
+        -:   48:
+        -:   49:				\warning Файл должен быть открыт заранее
+        -:   50:				\warning Предыдущее содержтмое стирается
+        -:   51:
+        -:   52:				Сначала вводится число вершин, потом координаты каждой
+        -:   53:			*/
+        6:   54:			Status read (FILE* fp = stdin, bool is_human = false) {
+        6:   55:				if(fp == nullptr)
+[41;37m[K        0[m[K:   56:					return Status(err_type::open);
+[45;37m[K        6[m[K:   57:				if(is_human)  printf("Input coordinates: ");
+        6:   58:				if(fscanf(fp, "%lf %lf", &x, &y) != 2)
+        1:   59:					return Status(err_type::format);
+        5:   60:				return Status(err_type::success);
+        -:   61:			}
+        -:   62:			/// Печать точки
+        -:   63:			void print () {
+        -:   64:				printf("x: %lf , y: %lf\n", x, y);
+        -:   65:			}
+        -:   66:			/// Расстояние между точками
+        -:   67:			double get_distance (Point& p) const {
+        -:   68:				return sqrt(pow(x - p.x, 2) + pow(y - p.y, 2));
+        -:   69:			}
+        -:   70:			/// Возвращает угол между Ox и вектором (x, y)
+        4:   71:			double get_angle () const {
+[45;37m[K        4[m[K:   72:				return (x != 0 ? atan(y / x) : (y > 0 ? M_PI/2. : -M_PI/2.));
+        -:   73:			}
+        -:   74:			friend class Polygon;
+        -:   75:	} ;
+        -:   76:
+        -:   77:	/*!
+        -:   78:		\brief Класс, реализующий многоугольник
+        -:   79:	*/
+        -:   80:	class Polygon {
+        -:   81:		private:
+        -:   82:			int n = 0; ///< Число вершин
+        -:   83:			Point* vertex = nullptr; ///< Указатель на массив вершин
+        -:   84:		public:
+        -:   85:			/// Конструктор по умолчанию
+        -:   86:			Polygon () = default;
+        -:   87:			/// Деструктор
+        4:   88:			~Polygon () {
+        4:   89:				if(vertex != nullptr)
+        2:   90:					delete[] vertex;
+        4:   91:			}
+        -:   92:			/// Очистка полей класса (с освобождением памяти vertex)
+        -:   93:			void clear () {
+        -:   94:				n = 0;
+        -:   95:				if(vertex != nullptr)
+        -:   96:					delete[] vertex;
+        -:   97:				vertex = nullptr;
+        -:   98:			}
+        -:   99:			/*!
+        -:  100:				Ввод точек многоугольника из файла
+        -:  101:
+        -:  102:				\param fp Файл для ввода (по умолчанию stdin)
+        -:  103:				\param is_human {По умолчанию false, при true выводятся сообщения
+        -:  104:					о том, что нужно вводить в данный момент}
+        -:  105:
+        -:  106:				\warning Файл должен быть открыт заранее
+        -:  107:				\warning Предыдущее содержтмое стирается
+        -:  108:
+        -:  109:				Сначала вводится число вершин, потом координаты каждой
+        -:  110:			*/
+        3:  111:			Status read (FILE *fp = stdin, bool is_human = false) {
+        3:  112:				if(fp == nullptr)
+[41;37m[K        0[m[K:  113:					return Status(err_type::open);
+[45;37m[K        3[m[K:  114:				if(is_human)  printf("Enter number of vertices: ");
+        3:  115:				if(fscanf(fp, "%d", &n) != 1)
+        1:  116:					return Status(err_type::format);
+[45;37m[K        7[m[K:  117:				vertex = new Point[n];
+[45;37m[K        2[m[K:  118:				if(is_human)  printf("Enter vertices' coordinates:\n");
+        6:  119:				for(int i = 0; i < n; i++){
+        5:  120:					if(!vertex[i].read(fp, is_human).good())
+        1:  121:						return Status(err_type::format);
+        -:  122:				}
+        1:  123:				return Status(err_type::success);
+        -:  124:			}
+        -:  125:			/// Печать данных о многоугольнике в stdout
+        -:  126:			void print () const {
+        -:  127:				printf("Number of vertices: %d\n", n);
+        -:  128:				for(int i = 0; i < n; i++)
+        -:  129:					printf("%d: %lf %lf\n", i + 1, vertex[i].x, vertex[i].y);
+        -:  130:			}
+        -:  131:			/// Решение задачи - нахождение угла, из которого p видит многоугольник
+        1:  132:			double get_view_angle (Point& p) {
+        1:  133:				double min_angle = M_PI, max_angle = -M_PI, tmp;
+        5:  134:				for(int i = 0; i < n; i++) {
+        4:  135:					Point v(vertex[i].x - p.x, vertex[i].y - p.y);
+        4:  136:					tmp = v.get_angle();
+        4:  137:					min_angle = std::min(min_angle, tmp);
+        4:  138:					max_angle = std::max(max_angle, tmp);
+        -:  139:				}
+        1:  140:				return max_angle - min_angle;
+        -:  141:			}
+        -:  142:	} ;
+        -:  143:
+        -:  144:}
+        -:  145:
+        -:  146:# endif // GEOMETRY

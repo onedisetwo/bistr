@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/geometry_task_selftest.dir/src/task.cpp.o -o bin/geometry_task_selftest  -lgcov 
